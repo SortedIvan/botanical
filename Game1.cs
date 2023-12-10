@@ -46,7 +46,7 @@ namespace Project1
                 Exit();
 
             // TODO: Add your update logic here
-
+            map.Update();
 
 
             base.Update(gameTime);

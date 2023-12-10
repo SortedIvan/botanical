@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-
+using Project1.Game_Systems.Input;
 
 namespace Project1.Game_Systems
 {
@@ -46,7 +40,10 @@ namespace Project1.Game_Systems
 
         public void Update()
         {
-
+            for (int i = 0; i < _mapTiles.Count; i++)
+            {
+                HoverOverTile(_mapTiles[i]);
+            }
         }
 
 
@@ -76,6 +73,21 @@ namespace Project1.Game_Systems
             }
         }
 
+        private void HoverOverTile(MapTile tile)
+        {
+            Point mousePoint = InputManager.GetMousePositionPoint();
+            
+            if (tile.GetTileBounds().Contains(mousePoint))
+            {
+                tile.SetTileSelected(true);
+                Debug.WriteLine("Goodevening");
+            }
+            else
+            {
+                tile.SetTileSelected(false);
+            }
+
+        }
 
 
 
