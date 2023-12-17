@@ -12,7 +12,7 @@ namespace Project1.Game_Systems
         private SpriteBatch _spriteBatch;
         private ContentManager _contentManager;
 
-        private Texture2D _groundUnselected;
+        private Texture2D _groundUnselectedV1;
         private Texture2D _groundSelected;
 
         private List<MapTile> _mapTiles = new List<MapTile>();
@@ -26,7 +26,7 @@ namespace Project1.Game_Systems
         public void LoadContent()
         {
             _groundSelected = this._contentManager.Load<Texture2D>("ground_selected");
-            _groundUnselected = this._contentManager.Load<Texture2D>("ground_unselected");
+            _groundUnselectedV1 = this._contentManager.Load<Texture2D>("grass_var2");
 
             // Upon loading the content, generate a new map;
             GenerateRandomMap();
@@ -49,25 +49,41 @@ namespace Project1.Game_Systems
 
         private void GenerateRandomMap()
         {
-            Vector2 startingPoint = new Vector2(200,100);
 
-            // Generate a 3x3 map
-            for (int i = 0; i < 3; i++)
+            int mapRightOffset = 200;
+
+            Vector2 mapStartPosition = new Vector2(640, 100);
+            Vector2 offset = new Vector2(0, 0);
+            int unselectedBlockHeight = 18;
+
+            for (int i = 0; i < 4; i++, IncreaseOffset(ref offset, _groundUnselectedV1.Width / 2,
+                _groundUnselectedV1.Height / 2 - unselectedBlockHeight))
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < 4; j++ )
                 {
-                    Vector2 tilePosition = new Vector2(startingPoint.X + i * _groundSelected.Width, startingPoint.Y + j * _groundSelected.Height);
-                    MapTile tile = new MapTile(_groundUnselected, _groundSelected, _spriteBatch, tilePosition);
+                    Vector2 tilePosition =
+                        new Vector2(
+                            mapStartPosition.X - (_groundUnselectedV1.Width / 2 - 2) * j + offset.X,
+                            mapStartPosition.Y + (_groundSelected.Height / 2 + unselectedBlockHeight) * j + offset.Y 
+                        );
+
+                    MapTile tile = new MapTile(_groundUnselectedV1, _groundSelected, _spriteBatch, tilePosition);
                     _mapTiles.Add(tile);
-                }   
+
+                }
             }
-
-
         }
+
+        private void IncreaseOffset(ref Vector2 offset, int xAmount, int yAmount)
+        {
+            offset.X += xAmount;
+            offset.Y += yAmount;
+        }
+
 
         private void DrawMap()
         {
-            for (int i = 0; i <  _mapTiles.Count; i++) 
+            for (int i = 0; i < _mapTiles.Count; i++) 
             {
                 _mapTiles[i].Draw();
             }
@@ -80,7 +96,6 @@ namespace Project1.Game_Systems
             if (tile.GetTileBounds().Contains(mousePoint))
             {
                 tile.SetTileSelected(true);
-                Debug.WriteLine("Goodevening");
             }
             else
             {
